@@ -1,0 +1,138 @@
+.model small
+.stack
+.data
+m1 db 10, 13, "Addition is: $"
+m2 db 10, 13, "Subtraction is: $"
+m3 db 10, 13, "Enter first number: $"
+m4 db 10, 13, "Enter second number: $"
+num1 dw ?
+num2 dw ?
+res dw ?
+
+.code
+
+disp macro xx
+mov ah, 09
+lea dx, xx
+int 21h
+endm
+
+.startup
+disp m3
+;taking input from user
+mov ah, 01
+int 21h
+;subtracting the entered value from 30h and seperating the two digits
+sub al, 30h
+mov cl, 4
+shl al, cl
+mov bh, al
+;entering second digit and adding it to first digit
+mov ah, 01
+int 21h
+sub al, 30h
+add bh, al
+;entering third and fourth digit
+mov ah, 01
+int 21h
+sub al,30h
+mov cl, 4
+shl al, cl
+mov bl, al
+
+mov ah, 01
+int 21h
+sub al, 30h
+add bl, al 
+
+mov num1, bx
+
+disp m4
+;taking input from user
+mov ah, 01
+int 21h
+;subtracting the entered value from 30h and seperating the two digits
+sub al, 30h
+mov cl, 4
+shl al, cl
+mov bh, al
+;entering second digit and adding it to first digit
+mov ah, 01
+int 21h
+sub al, 30h
+add bh, al
+;entering third and fourth digit
+mov ah, 01
+int 21h
+sub al,30h
+mov cl, 4
+shl al, cl
+mov bl, al
+
+mov ah, 01
+int 21h
+sub al, 30h
+add bl, al 
+
+mov num2, bx
+
+disp m1
+mov ax, num1
+add ax, num2
+mov res, ax
+call disp1
+
+disp m2
+mov ax, num1
+sub ax, num2
+mov res, ax
+call disp1
+
+jmp last
+
+
+
+disp1 proc
+mov bx, res
+
+and bh, 0f0h
+mov cl, 4
+shr bh, cl
+add bh, 30h
+mov dl, bh
+mov ah, 02
+int 21h 
+
+mov bx, res
+
+and bh, 0fh
+add bh, 30h
+mov dl, bh
+mov ah, 02
+int 21h  
+
+mov bx, res
+
+and bl, 0f0h
+mov cl, 4
+shr bl, cl
+add bl, 30h
+mov dl, bl
+mov ah, 02
+int 21h  
+
+mov bx, res
+
+and bl, 0fh
+add bl, 30h
+mov dl, bl
+mov ah, 02
+int 21h
+
+ret
+
+disp1 endp
+
+last:
+.exit
+end
